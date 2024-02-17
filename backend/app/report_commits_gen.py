@@ -74,7 +74,7 @@ def parse_files_rows(full_json):
     return out_string
 
 
-def process(json_str, html_template_path, reports_dir="."):
+def process_second(json_str, html_template_path, reports_dir="."):
     # Parse the string into a json file
     json_data = json.loads(json_str)
 

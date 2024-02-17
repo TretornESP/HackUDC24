@@ -10,7 +10,10 @@ services:
         condition: service_healthy
     links:
       - db
+    env_file:
+      - secret.env
     environment:
+      GITHUB_SECRET: 
       TARGET_REPO: https://github.com/tretornesp/mbedtls.git
       TARGET_BRANCH: hackudc
       TARGET_POLL_INTERVAL: 10
@@ -31,6 +34,8 @@ services:
       - buildbot
       - backend
     environment:
+      REPORT_URL: http://localhost:5000/
+      GITHUB_SECRET: 
       WORKER_USER: worker
       WORKER_PASS: worker
     build:
