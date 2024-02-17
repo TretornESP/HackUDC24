@@ -5,6 +5,7 @@ import os
 import json
 from flask import Flask, request
 from .gen_report import process
+from .report_commits_gen import process_second
 
 def project_init():
     app = Flask(__name__, instance_relative_config=True)
@@ -38,7 +39,7 @@ def project_init():
             )
 
             # Generate aux report
-            process(
+            process_second(
                 my_json,
                 "/templates/"+os.environ.get('GRAPHICS_REPORT_TEMPLATE', "report_commits_base.html"),
                 os.environ.get('REPORTS_DIR', "/reports")
