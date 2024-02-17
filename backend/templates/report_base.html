@@ -33,7 +33,8 @@
 
                 // If iframe is hidden, show it and set source to current HTML file with __2 appended
                 frame.style.display = "block";
-                frame.src = window.location.pathname.replace(/\.html$/, "__2.html");
+                //Append __2 to the current URL to prevent reload when shown again
+                frame.src = window.location.pathname + "__2";
             } else {
                 // Replace text with "More Information" when collapsed
                 document.querySelector(".button_more h3").innerText = "More Information";

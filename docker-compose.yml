@@ -1,5 +1,20 @@
 version: '3.8'
 services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "4043:4043"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/ssl
+    depends_on:
+      - buildbot-master
+      - backend
+    networks:
+      - buildbot
+      - backend
   buildbot-master:
     networks:
       - buildbot
@@ -13,9 +28,10 @@ services:
     env_file:
       - secret.env
     environment:
-      GITHUB_SECRET: 
+      GITHUB_SECRET: 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
       TARGET_REPO: https://github.com/tretornesp/mbedtls.git
       TARGET_BRANCH: hackudc
+      REPORT_URL: http://localhost:4043/
       TARGET_POLL_INTERVAL: 10
       BUILDBOT_WEB_PORT: 8010
       BUILDBOT_MASTER_PORT: 9989
@@ -23,6 +39,9 @@ services:
       BUILDBOT_DB_URL: postgresql+psycopg2://buildbot:buildbot@db:5432/buildbot
       WORKER_USER: worker
       WORKER_PASS: worker
+    expose:
+      - "8010"
+      - "9989"
     ports:
       - "8010:8010"
       - "9989:9989"
@@ -34,8 +53,6 @@ services:
       - buildbot
       - backend
     environment:
-      REPORT_URL: http://localhost:5000/
-      GITHUB_SECRET: 
       WORKER_USER: worker
       WORKER_PASS: worker
     build:
@@ -54,8 +71,8 @@ services:
       POSTGRES_DB: buildbot
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U buildbot"]
@@ -72,8 +89,6 @@ services:
     volumes:
       - reports:/reports:rw
     restart: "always"
-    ports:
-      - "5000:5000"
     expose:
       - "5000"
     networks:

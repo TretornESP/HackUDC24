@@ -13,11 +13,6 @@ def project_init():
     @app.route('/<name>')
     def get_page(name):
         #Check that name is of of format YYYY_MM_DD_HH_MM_SS.html
-        if not name.endswith(".html"):
-            return "Invalid file name", 400
-        name = name[:-5]
-        if not name.replace("_", "").isdigit():
-            return "Invalid file name", 400
         #Check that the name is a valid file
         if not os.path.exists(os.environ.get('REPORTS_DIR', "reports") + "/" + name + ".html"):
             return "File not found", 404
@@ -47,7 +42,7 @@ def project_init():
 
             # print("http://localhost:5000/"+filename+".html", flush=True)
             #Return the link to the file
-            return "http://localhost:5000/"+filename+".html", 200
+            return "http://localhost:5000/"+filename, 200
         except Exception as e:
             return str(e), 500    
         
