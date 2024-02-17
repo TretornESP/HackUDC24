@@ -29,6 +29,7 @@ services:
   buildbot-worker:
     networks:
       - buildbot
+      - backend
     environment:
       WORKER_USER: worker
       WORKER_PASS: worker
@@ -56,9 +57,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  backend:
+    container_name: backend
+    build: ./backend
+    restart: "always"
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    networks:
+      - backend
 
 networks:
   buildbot:
+  backend:
 
 volumes:
   master-data:

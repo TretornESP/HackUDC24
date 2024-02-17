@@ -26,7 +26,7 @@ os.chdir(REPO_ROOT_PATH)
 # Execute the bash commands:
 # cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_EXPORT_COMPILE_COMMANDS=On -DCMAKE_BUILD_TYPE=Release -B build -G "Unix Makefiles" ./
 # make -C build 
-subprocess.run(['cmake', '-DCMAKE_C_COMPILER=gcc', '-DCMAKE_EXPORT_COMPILE_COMMANDS=On', '-DCMAKE_BUILD_TYPE=Release', '-B', 'build', '-G', '"Unix Makefiles"', './'])
+subprocess.run(['cmake', '-DCMAKE_C_COMPILER=gcc', '-DCMAKE_EXPORT_COMPILE_COMMANDS=On', '-DCMAKE_BUILD_TYPE=Release', '-B', 'build', '-G', 'Unix Makefiles', './'])
 subprocess.run(['make', '-C', 'build'])
 
 # Get all files individually 
@@ -61,7 +61,7 @@ checking_output = json.loads(checking_command_execution.stdout)
 # git log --pretty=format:'{%n  "commit": "%H",%n  "abbreviated_commit": "%h",%n  "tree": "%T",%n  "abbreviated_tree": "%t",%n  "parent": "%P",%n  "abbreviated_parent": "%p",%n  "refs": "%D",%n  "encoding": "%e",%n  "subject": "%s",%n  "sanitized_subject_line": "%f",%n  "body": "%b",%n  "commit_notes": "%N",%n  "verification_flag": "%G?",%n  "signer": "%GS",%n  "signer_key": "%GK",%n  "author": {%n    "name": "%aN",%n    "email": "%aE",%n    "date": "%aD"%n  },%n  "commiter": {%n    "name": "%cN",%n    "email": "%cE",%n    "date": "%cD"%n  }}%n' -n 1
 
 #git_command_line = ["git", "log", "--pretty=format:{%n  \"commit\": \"%H\",%n  \"abbreviated_commit\": \"%h\",%n  \"tree\": \"%T\",%n  \"abbreviated_tree\": \"%t\",%n  \"parent\": \"%P\",%n  \"abbreviated_parent\": \"%p\",%n  \"refs\": \"%D\",%n  \"encoding\": \"%e\",%n  \"subject\": \"%s\",%n  \"sanitized_subject_line\": \"%f\",%n  \"body\": \"%b\",%n  \"commit_notes\": \"%N\",%n  \"verification_flag\": \"%G?\",%n  \"signer\": \"%GS\",%n  \"signer_key\": \"%GK\",%n  \"author\": {%n    \"name\": \"%aN\",%n    \"email\": \"%aE\",%n    \"date\": \"%aD\"%n  },%n  \"commiter\": {%n    \"name\": \"%cN\",%n    \"email\": \"%cE\",%n    \"date\": \"%cD\"%n  }}%n", "-n", "1"]
-git_command_line = ["./get_git.sh"]
+git_command_line = ["/worker/get_git.sh"]
 git_command_execution = subprocess.run(git_command_line, capture_output=True, text=True)
 git_output = json.loads(git_command_execution.stdout)
 
