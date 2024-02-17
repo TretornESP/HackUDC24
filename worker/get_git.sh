@@ -14,7 +14,7 @@ get_git_info() {
 
     author=$(git show -s --format='%an' HEAD)
 
-    date=$(git show -s --format='%ci' HEAD)
+    date=$(git show -s --format=%ct HEAD)
 
     message=$(git show -s --format='%B' HEAD | sed 's/"/\\"/g')
     
