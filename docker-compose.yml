@@ -60,6 +60,11 @@ services:
   backend:
     container_name: backend
     build: ./backend
+    environment:
+      REPORT_TEMPLATE: "report_base.html"
+      REPORT_DIR: "/reports"
+    volumes:
+      - reports:/reports
     restart: "always"
     ports:
       - "5000:5000"
@@ -76,3 +81,4 @@ volumes:
   master-data:
   worker-data:
   postgres-data:
+  reports:
