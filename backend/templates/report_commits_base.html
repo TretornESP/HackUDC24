@@ -29,7 +29,6 @@
         maxColor: '#B0C4DE',
         headerHeight: 15,
         showScale: true,
-        height: 200,
         useWeightedAverageForAggregation: true,
         generateTooltip: showFullTooltip
       };
@@ -72,7 +71,6 @@
         maxColor: '#B0C4DE',
         headerHeight: 15,
         showScale: true,
-        height: 200,
         useWeightedAverageForAggregation: true,
         generateTooltip: showFullTooltip2
       };
@@ -99,9 +97,23 @@
 
     }
   </script>
+  <style>
+    .treeplot {
+      width: 95%;
+      height: 300px;
+      align-self: center;
+      flex-direction: column;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+  </style>
 </head>
 <body>
-  <div id="chart_div"></div>
-  <div id="chart_div_files"></div>
+  <div class="container">
+    <div id="chart_div" class="treeplot"></div>
+    <div id="chart_div_files" class="treeplot"></div>
+  </div>
 </body>
-</html>

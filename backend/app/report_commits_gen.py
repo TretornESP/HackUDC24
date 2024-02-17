@@ -3,6 +3,10 @@ import json
 import datetime
 from itertools import groupby
 
+def epoch_to_filename(epoch_time):
+    utc_time = datetime.datetime.fromtimestamp(epoch_time, datetime.UTC)
+    return utc_time.strftime('%Y_%m_%d_%H_%M_%S')
+
 def parse_path(path):
     """
     Parse the path and return the filename and the path.
@@ -66,29 +70,14 @@ def parse_files_rows(full_json):
     return out_string
 
 
-def main():
-    
-    if len(sys.argv) < 3:
-        print(f"Usage: python3 {sys.argv[0]} <data.json> <template.html>")
-        sys.exit(1)
+def process(json_str, html_template_path, reports_dir="."):
+    # Parse the string into a json file
+    json_data = json.loads(json_str)
 
-    # Get the file path from the command line argument
-    json_file_path = sys.argv[1]
-    try:
-        # Open the JSON file
-        with open(json_file_path, 'r') as f:
-            json_data = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: File '{json_file_path}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: File '{json_file_path}' is not a valid JSON file.")
-        sys.exit(1)
-
-    template_file_path = sys.argv[2]
+    template_file_path = html_template_path
     try:
         with open(template_file_path, 'r') as template_file:
-            html_template = template_file.read()
+            template_content = template_file.read()
     except FileNotFoundError:
         print(f"Error: Template file '{template_file_path}' not found.")
         sys.exit(1)
@@ -103,12 +92,22 @@ def main():
     }
 
     for placeholder, value in placeholders.items():
-        html_template = html_template.replace(placeholder, str(value))
+        template_content = template_content.replace(placeholder, str(value))
 
     # Write the modified HTML template to a new file
-    with open(f"last_temp_report.html", 'w') as f:
-        f.write(html_template)
+    filename = f"{reports_dir}/{epoch_to_filename((int)(json_data["git"]["Date"]))}__2.html"
+    # Write the modified HTML template to a new file
+    with open(filename, 'w') as f:
+        f.write(template_content)
 
 # Execute the main function if the script is run directly
 if __name__ == "__main__":
-    main()
+    # Read the JSON string from the command line
+    json_str = sys.argv[1]
+    html_template_path = sys.argv[2]
+
+    # Open the json file
+    with open(json_str, 'r') as file:
+        json_str = file.read()
+
+    process(json_str=json_str, html_template_path=html_template_path)

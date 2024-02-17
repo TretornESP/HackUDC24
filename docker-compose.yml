@@ -62,6 +62,7 @@ services:
     build: ./backend
     environment:
       REPORT_TEMPLATE: "report_base.html"
+      GRAPHICS_REPORT_TEMPLATE: "report_commits_base.html"
       REPORTS_DIR: "/reports"
     volumes:
       - reports:/reports:rw
