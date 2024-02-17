@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report of commit $commit$</title>
+    <style>
+        body {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            width: 100%; /* Set width to 90% of available screen width */
+        }
+
+        .box-wrapper {
+            margin: 10px;
+            border: 10px solid; /* Added colored border */
+        }
+
+        .box-wrapper.red {
+            border-color: #D2222D; /* Red border color */
+            background-color: #D2222D;
+        }
+
+        .box-wrapper.yellow {
+            border-color: #FFBF00; /* Yellow border color */
+            background-color: #FFBF00;
+
+        }
+
+        .box-wrapper.green {
+            border-color: #238823; /* Green border color */
+            background-color: #238823;
+
+        }
+
+        .box {
+            width: 100%; /* Adjusted width to fill 90% of available screen width */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .checkbox {
+            width: 640px; /* Adjusted width to fill 90% of available screen width */
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            margin-bottom: 10px;
+        }
+
+        .checkbox.red {
+            background-color: #FCEAEB;
+        }
+
+        .checkbox.yellow {
+            background-color: #FFF2CD;
+        }
+
+        .checkbox.green {
+            background-color: #C7F1C7;
+        }
+
+        /* Remove margin from the last .checkbox within each .box */
+        .box .checkbox:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox a {
+            text-decoration: none;
+            color: #0011ff;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        .checkbox hr {
+            margin: 10px 0;
+            border: 0;
+            border-top: 1px solid #ccc;
+        }
+
+        .suggestion-icon {
+            width: 20px;
+            height: 20px;
+            float: right;
+            align-self: right;
+            text-align: center;
+            line-height: 20px;
+            background-color: #FF0000;
+            color: white;
+            border-radius: 50%;
+            cursor: help; /* Change cursor to pointer on hover */
+            font-weight: bold;
+        }
+
+        .suggestion-icon-text {
+            color: darkslategray;
+            visibility: hidden;
+            background-color: lightgray;
+            text-align: center;
+            padding: 5px 0;
+            font-weight: normal;
+
+            /* Add a thick dark grey border */
+            border: 3px solid darkslategray;
+            border-radius: 10px;
+            
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+
+        .text-wrapper {
+            margin-top: 10px; /* Add margin for the text inside the background */
+            margin-bottom: 10px; /* Add margin for the text inside the background */
+            margin-left: 13px; /* Add margin for the text inside the background */
+            margin-right: 13px; /* Add margin for the text inside the background */
+        }
+
+        .suggestion-icon:hover{
+            background-color: #FF6666;
+        }
+
+        .suggestion-icon:hover .suggestion-icon-text{
+            visibility: visible;
+            text-align: left;
+        }
+
+        .related_code {
+            margin-left: 15px;
+            margin-right: 15px;
+            resize: vertical;
+            width: 90%;
+        }
+
+        .related_code.red {
+            background-color: #FEF8F8;
+        }
+
+        .related_code.yellow {
+            background-color: #FFFBEF;
+        }
+
+        .related_code.green {
+            background-color: #EAFAEA;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0 1.5%;
+        }
+        li {
+            margin: 7px 0;
+        }
+
+        .floating-image {
+            float: right;
+            width: 250px;
+            height: 250px;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg" alt="Floating Image" class="floating-image">
+
+    <h1>Report of commit $commit$</h1>
+    <ul>
+        <li>Repository: <a href="$repository_url$">$repository$</a></li>
+        <li>Branch: $branch$</li>
+        <li>Commit: <a href="$commit_url$">$commit$</a></li>
+        <li>Author: $author$</li>
+        <li>Date: $date$</li>
+        <li>Message: $message$</li>
+    </ul>
+  
+  
+    <h3>Analysis</h3>
+    <ul>
+        <li>Elapsed time: $elapsed$ ms</li>
+        <li>Compiler flags: <code>$flags$</code></li>
+    </ul>
+
+    <h3>Checks</h3>
+    <div class="container">
+        <div class="box-wrapper red">
+            <div class="box">
+                $checkboxes_red$
+            </div>
+        </div>
+        <div class="box-wrapper yellow">
+            <div class="box">
+                $checkboxes_yellow$
+            </div>
+        </div>
+        <div class="box-wrapper green">
+            <div class="box">
+                $checkboxes_green$
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
