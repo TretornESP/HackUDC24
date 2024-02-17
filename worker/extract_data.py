@@ -12,6 +12,7 @@ if len(sys.argv) != 3:
 REPO_ROOT_PATH = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]
 
+og_dir = os.getcwd()
 EXECUTABLE_NAME = "pwreport"
 
 # Create the output directory if it does not exist
@@ -77,3 +78,5 @@ with open(os.path.join(OUTPUT_DIR, "full_output.json"), "w") as f:
         "git": git_output
     }
     json.dump(full_output, f, indent=4)
+    
+os.chdir(og_dir)
