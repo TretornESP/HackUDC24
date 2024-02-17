@@ -44,4 +44,17 @@ We will use:
  - The `--verbose` flag to get more detailed information about the issues found.
  - The `--lang` flag to specify the language of the code.
  - The `--show-progress` flag to see the progress of the analysis.
- 
+
+
+## Step X: Obtain Codee metrics for chart generation
+When new changes are commited into the repository, a new worker container is instantiated to execute Codee and obtain the possible optimizations that can be applied in the code.
+
+Initially, the repository is cloned into the container and the compile commands database is produced for the Codee execution.
+The script then executes 2 commands of CODEE to obtain the maximum amount of available information:
+```bash
+pwreport ./* --config build/compile_commands.json --screening --lang C --json --exclude build/
+pwreport ./* --config build/compile_commands.json --checks --verbose --lang C --json --exclude build/
+``` 
+Information about the repository and the last commit is also collected.
+A Json file containing the information from Codee and from the last commit applied to the repository is created and forwarded to a web-server to store and use in future report generation. 
+

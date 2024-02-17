@@ -26,6 +26,8 @@ USER buildbot
 WORKDIR /worker
 COPY start.sh .
 COPY runner.sh .
+COPY extract_data.py .
+COPY get_git.sh .
 
 RUN buildbot-worker create-worker . buildbot-master worker worker
 CMD ["./start.sh"]
