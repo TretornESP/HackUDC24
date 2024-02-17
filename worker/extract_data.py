@@ -5,7 +5,32 @@ import sys
 import subprocess
 import json
 import re
+import smtplib
+from email.mime.text import MIMEText
+import traceback
 
+EMAIL = "bananaeliteforces@gmail.com"
+PASSWORD = "dtawogyinvochfsc"
+
+
+def mail_warning(recipient, tag, commit):
+    subject = f"Tag {tag} in commit {commit}"
+    body = f"Tag {tag} in commit {commit}"
+    try :
+        msg = MIMEText(body)
+        msg['Subject'] = subject
+        msg['From'] = EMAIL
+        msg['To'] = recipient
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+            smtp_server.login(EMAIL, PASSWORD)
+            smtp_server.sendmail(EMAIL, recipient, msg.as_string())
+    except:
+        print("Error sending mail")
+        traceback.print_exc()
+        return
+    
+    
+    
 def tag_compile(input_text):
     pattern = re.compile(r"[A-Za-z][A-Za-z][A-Za-z]\d\d\d", re.IGNORECASE)
     return pattern.match(input_text)
@@ -27,10 +52,6 @@ if not os.path.exists(OUTPUT_DIR):
 # Go to the root of the repository
 os.chdir(REPO_ROOT_PATH)
 
-
-
-    
-
 # Take advantage of Codee integration with CMake 
 # to generate a `compile_commands.json` file in the `build` directory.
 # Execute the bash commands:
@@ -41,7 +62,9 @@ subprocess.run(['make', '-C', 'build'])
 
 config = False
 only_tags = []
+mail_list = []
 if os.path.exists('codee_config.json') :
+    config = True
     file = open('codee_config.json')
     config_param = json.load(file)
     if 'only-tags' in config_param.keys():
@@ -49,6 +72,12 @@ if os.path.exists('codee_config.json') :
             is_valid = tag_compile(tag)
             if (is_valid):
                 only_tags.append(tag)
+    if 'mail-list' in config_param.keys():
+        for pair in config_param['mail-list']:
+            tags = []
+            for tag in pair['tag']:
+                tags.append(tag)
+            mail_list.append((pair['mail'], tags))
             
 
 # Get all files individually 
@@ -68,8 +97,10 @@ if (len(only_tags) > 0):
 screening_command_line.extend(['--config', 'build/compile_commands.json', '--screening', '--lang', 'C', '--json','--accept-eula' ,'--exclude', 'build/'])
 #print(screening_command_line)
 screening_command_execution = subprocess.run(screening_command_line, capture_output=True, text=True)
-screening_output = json.loads(screening_command_execution.stdout)
-
+try:
+    screening_output = json.loads(screening_command_execution.stdout)
+except:
+    screening_output = ''
 #with open(os.path.join(OUTPUT_DIR, "screening.json"), "w") as f:
 #    json.dump(screening_output, f, indent=4)
 
@@ -82,7 +113,15 @@ if (len(only_tags) > 0):
 checking_command_line.extend(['--config', 'build/compile_commands.json', '--checks', '--verbose', '--lang', 'C', '--json', '--accept-eula', '--exclude', 'build/'])
 #print(checking_command_line)
 checking_command_execution = subprocess.run(checking_command_line, capture_output=True, text=True)
-checking_output = json.loads(checking_command_execution.stdout)
+checks = set()
+try:
+    checking_output = json.loads(checking_command_execution.stdout)
+    
+    for check_info in checking_output['Checks'] :
+        if check_info['Check'] not in checks:
+            checks.add(check_info['Check'])
+except:
+    checking_output = ''
 
 #with open(os.path.join(OUTPUT_DIR, "checking.json"), "w") as f:
 #    json.dump(checking_output, f, indent=4)
@@ -94,6 +133,19 @@ checking_output = json.loads(checking_command_execution.stdout)
 git_command_line = ["/worker/get_git.sh"]
 git_command_execution = subprocess.run(git_command_line, capture_output=True, text=True)
 git_output = json.loads(git_command_execution.stdout)
+commit = git_output['Commit']['Hash']
+
+#### Send mail if necesary
+if config:
+    if len(mail_list) > 0:
+        for mail_pair in mail_list:
+            mail = mail_pair[0]
+            tags = mail_pair[1]
+            
+            for tag in tags:
+                if tag in checks:
+                    mail_warning(mail, tag, commit)
+
 
 #with open(os.path.join(OUTPUT_DIR, "git.json"), "w") as f:
 #    json.dump(git_output, f, indent=4)
