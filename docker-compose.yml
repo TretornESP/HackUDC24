@@ -11,8 +11,8 @@ services:
     links:
       - db
     environment:
-      TARGET_REPO: https://github.com/TretornESP/hackudc.git
-      TARGET_BRANCH: main
+      TARGET_REPO: https://github.com/forcegk/mbedtls.git
+      TARGET_BRANCH: hackudc
       TARGET_POLL_INTERVAL: 10
       BUILDBOT_WEB_PORT: 8010
       BUILDBOT_MASTER_PORT: 9989
