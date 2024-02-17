@@ -179,7 +179,9 @@ def process(json_str, html_template_path, reports_dir="."):
     for placeholder, value in placeholders.items():
         html_template = html_template.replace(placeholder, str(value))
     
-    filename = f"{epoch_to_filename(git_date_epoch)}"
+    # filename = f"{epoch_to_filename(git_date_epoch)}"
+    # set filename to the commit hash
+    filename = f"{git_commit_hash}"
     print(f"Writing to {reports_dir}/{filename}.html", flush=True)
     # Write the modified HTML template to a new file
     with open(f"{reports_dir}/{filename}.html", 'w') as f:
