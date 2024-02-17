@@ -114,4 +114,4 @@ if __name__ == "__main__":
     with open(json_str, 'r') as file:
         json_str = file.read()
 
-    process(json_str=json_str, html_template_path=html_template_path)
+    process_second(json_str=json_str, html_template_path=html_template_path)
