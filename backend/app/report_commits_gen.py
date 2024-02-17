@@ -52,6 +52,7 @@ def parse_files_rows(full_json):
     files = full_json["screening"]["Evaluation"][0]
     out_string = "[['Paths', null, 0],"
     paths = dict()
+    values = dict()
     main_path = "Paths"
     for file in files:
         if file.get("Target") == "Total":
@@ -62,15 +63,18 @@ def parse_files_rows(full_json):
             if path not in paths:
                 if idx == 0:
                     paths[path] = "Paths"
+                    values[path] = 0
                 else:
                     paths[path] = file_paths[idx-1]
+                    values[path] = 0
+            values[path]+=int(file.get('Effort')[:-2])
     for path, parent in paths.items():
-        out_string += f" ['{path}', '{parent}', 0],"
+        out_string += f" ['{path}', '{parent}', {values.get(path)}],"
     out_string += "]"
     return out_string
 
 
-def process(json_str, html_template_path, reports_dir="."):
+def process_second(json_str, html_template_path, reports_dir="."):
     # Parse the string into a json file
     json_data = json.loads(json_str)
 
@@ -112,4 +116,4 @@ if __name__ == "__main__":
     with open(json_str, 'r') as file:
         json_str = file.read()
 
-    process(json_str=json_str, html_template_path=html_template_path)
+    process_second(json_str=json_str, html_template_path=html_template_path)

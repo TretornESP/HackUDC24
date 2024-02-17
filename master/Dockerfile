@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install 'buildbot[bundle]'
 RUN python3 -m pip install 'psycopg2'
+RUN python3 -m pip install 'txrequests'
 
 RUN groupadd -r buildbot && useradd -r -g buildbot buildbot
 RUN mkdir /master && chown buildbot:buildbot /master

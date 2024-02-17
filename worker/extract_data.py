@@ -4,6 +4,11 @@ import os
 import sys
 import subprocess
 import json
+import re
+
+def tag_compile(input_text):
+    pattern = re.compile(r"[A-Za-z][A-Za-z][A-Za-z]\d\d\d", re.IGNORECASE)
+    return pattern.match(input_text)
 
 # Read the parameters from the command line
 if len(sys.argv) != 3:
@@ -22,6 +27,10 @@ if not os.path.exists(OUTPUT_DIR):
 # Go to the root of the repository
 os.chdir(REPO_ROOT_PATH)
 
+
+
+    
+
 # Take advantage of Codee integration with CMake 
 # to generate a `compile_commands.json` file in the `build` directory.
 # Execute the bash commands:
@@ -29,6 +38,18 @@ os.chdir(REPO_ROOT_PATH)
 # make -C build 
 subprocess.run(['cmake', '-DCMAKE_C_COMPILER=gcc', '-DCMAKE_EXPORT_COMPILE_COMMANDS=On', '-DCMAKE_BUILD_TYPE=Release', '-B', 'build', '-G', 'Unix Makefiles', './'])
 subprocess.run(['make', '-C', 'build'])
+
+config = False
+only_tags = []
+if os.path.exists('codee_config.json') :
+    file = open('codee_config.json')
+    config_param = json.load(file)
+    if 'only-tags' in config_param.keys():
+        for tag in config_param['only-tags']:
+            is_valid = tag_compile(tag)
+            if (is_valid):
+                only_tags.append(tag)
+            
 
 # Get all files individually 
 files_command = subprocess.run(["find", ".", "-type", "f"], capture_output=True, text=True)
@@ -41,7 +62,11 @@ files = files_command.stdout.split("\n")
 
 screening_command_line = [EXECUTABLE_NAME]
 screening_command_line.extend(files)
+if (len(only_tags) > 0):
+    screening_command_line.append('--only-tags')
+    screening_command_line.append(",".join(only_tags))
 screening_command_line.extend(['--config', 'build/compile_commands.json', '--screening', '--lang', 'C', '--json','--accept-eula' ,'--exclude', 'build/'])
+#print(screening_command_line)
 screening_command_execution = subprocess.run(screening_command_line, capture_output=True, text=True)
 screening_output = json.loads(screening_command_execution.stdout)
 
@@ -51,7 +76,11 @@ screening_output = json.loads(screening_command_execution.stdout)
 # Run the checking phase to extract the data
 checking_command_line = [EXECUTABLE_NAME]
 checking_command_line.extend(files)
+if (len(only_tags) > 0):
+    checking_command_line.append('--only-tags')
+    checking_command_line.append(",".join(only_tags))
 checking_command_line.extend(['--config', 'build/compile_commands.json', '--checks', '--verbose', '--lang', 'C', '--json', '--accept-eula', '--exclude', 'build/'])
+#print(checking_command_line)
 checking_command_execution = subprocess.run(checking_command_line, capture_output=True, text=True)
 checking_output = json.loads(checking_command_execution.stdout)
 
