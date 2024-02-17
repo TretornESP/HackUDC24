@@ -3,7 +3,7 @@
 
 import os
 from flask import Flask, request
-from .gen_report import process
+from gen_report import *
 
 def project_init():
     app = Flask(__name__, instance_relative_config=True)
