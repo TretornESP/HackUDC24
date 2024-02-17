@@ -41,7 +41,7 @@ files = files_command.stdout.split("\n")
 
 screening_command_line = [EXECUTABLE_NAME]
 screening_command_line.extend(files)
-screening_command_line.extend(['--config', 'build/compile_commands.json', '--screening', '--lang', 'C', '--json', '--exclude', 'build/'])
+screening_command_line.extend(['--config', 'build/compile_commands.json', '--screening', '--lang', 'C', '--json','--accept-eula' ,'--exclude', 'build/'])
 screening_command_execution = subprocess.run(screening_command_line, capture_output=True, text=True)
 screening_output = json.loads(screening_command_execution.stdout)
 
@@ -51,7 +51,7 @@ screening_output = json.loads(screening_command_execution.stdout)
 # Run the checking phase to extract the data
 checking_command_line = [EXECUTABLE_NAME]
 checking_command_line.extend(files)
-checking_command_line.extend(['--config', 'build/compile_commands.json', '--checks', '--verbose', '--lang', 'C', '--json', '--exclude', 'build/'])
+checking_command_line.extend(['--config', 'build/compile_commands.json', '--checks', '--verbose', '--lang', 'C', '--json', '--accept-eula', '--exclude', 'build/'])
 checking_command_execution = subprocess.run(checking_command_line, capture_output=True, text=True)
 checking_output = json.loads(checking_command_execution.stdout)
 
