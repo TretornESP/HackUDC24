@@ -6,7 +6,7 @@ For execution you need three files created:
 
 You must change the `docker-compose.yml` and the `master/master.cfg` configuration files because of weird edge cases which are very time-consuming to solve inside the latter file.
 ### docker-compose.yml
-You must manually get and set the `GITHUB_SECRET` token. To change the repo that it demoes against, you must change `TARGET_REPO`and `TARGET_BRANCH` lines. Finally, the `REPORT_URL` should work, but indeed, due to the dark magic used to craft the `master.cfg` parser, it does not work.
+You must manually get and set the `GITHUB_SECRET` token. To change the repo that it demoes against, you must change `TARGET_REPO`and `TARGET_BRANCH` lines. Finally, the `REPORT_URL` should indicate where the report would be generated. While the full implementation of this last feature has not been completed due to prioritized tasks, it does not impact the effectiveness of this demo.
 ### master/master.cfg
 In line 93 as of the current commit, you must paste the URL that the reports will be saved to.
 
