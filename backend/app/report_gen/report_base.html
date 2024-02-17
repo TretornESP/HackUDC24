@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report of commit $commit$</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = google.visualization.arrayToDataTable([
+                $pie_chart_data$
+            ]);
+
+            var options = {
+                title: 'Checker Type and Ratio'
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+    </script>
     <style>
         body {
         font-size: 20px;
@@ -162,13 +182,13 @@
 
         .floating-image {
             float: right;
-            width: 250px;
-            height: 250px;
+            width: 700px;
+            height: 500px;
         }
     </style>
 </head>
 <body>
-    <img src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg" alt="Floating Image" class="floating-image">
+    <div id="piechart" class="floating-image"></div>
 
     <h1>Report of commit $commit$</h1>
     <ul>
