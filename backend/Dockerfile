@@ -8,6 +8,7 @@ RUN mkdir -p /backend/app
 
 # Copy app
 ADD app/* /backend/app/
+ADD templates/* /templates/
 COPY wsgi.py /backend/wsgi.py
 COPY requirements.txt /backend/requirements.txt
 

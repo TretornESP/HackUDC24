@@ -14,53 +14,15 @@ def epoch_to_filename(epoch_time):
     utc_time = datetime.datetime.fromtimestamp(epoch_time, datetime.UTC)
     return utc_time.strftime('%Y_%m_%d_%H_%M_%S')
 
-def argparse(sys_argv):
-    # Check if the file path is provided as an argument
-    if len(sys_argv) < 5:
-        print(f"Usage: python3 {sys_argv[0]} <screening.json> <checking.json> <commit.json> <template.html>")
-        sys.exit(1)
+def argparse(json_str, html_template_path):
+    # Parse the string into a json file
+    json_obj = json.loads(json_str)
 
-    # Get the file path from the command line argument
-    screening_json_file_path = sys_argv[1]
-    try:
-        # Open the JSON file
-        with open(screening_json_file_path) as f:
-            screening_data = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: File '{screening_json_file_path}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: File '{screening_json_file_path}' is not a valid JSON file.")
-        sys.exit(1)
+    screening_data = json_obj["screening"]
+    checking_data = json_obj["checking"]
+    commit_data = json_obj["git"]
 
-    # Get the file path from the command line argument
-    checking_json_file_path = sys_argv[2]
-    try:
-        # Open the JSON file
-        with open(checking_json_file_path) as f:
-            checking_data = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: File '{checking_json_file_path}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: File '{checking_json_file_path}' is not a valid JSON file.")
-        sys.exit(1)
-
-
-    # Get the file path from the command line argument
-    commit_json_file_path = sys_argv[3]
-    try:
-        # Open the JSON file
-        with open(commit_json_file_path) as f:
-            commit_data = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: File '{commit_json_file_path}' not found.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: File '{commit_json_file_path}' is not a valid JSON file.")
-        sys.exit(1)
-    
-    template_file_path = sys_argv[4]
+    template_file_path = html_template_path
     try:
         with open(template_file_path, 'r') as template_file:
             template_content = template_file.read()
@@ -97,8 +59,17 @@ def populate_lX_checks(checks_list_lX, color):
         ''')
     return '\n'.join(color_box_content)
 
-def main():
-    (screening_data, checking_data, commit_data, html_template) = argparse(sys.argv)
+def generate_pie_table(screening_checkers):
+    total_checks = sum(check["#"] for check in screening_checkers)
+
+    pie_table = ["['Checker', 'Occurrences'],"]
+    for check in screening_checkers:
+        pie_table.append(f'[\'{check["Checker"]}\', {check["#"]}],')
+
+    return '\n'.join(pie_table)
+
+def process(json_str, html_template_path, reports_dir="."):
+    (screening_data, checking_data, commit_data, html_template) = argparse(json_str, html_template_path)
 
     # Extract Analysis data
     checking_analysis = checking_data['Analysis']
@@ -134,6 +105,21 @@ def main():
             checks_list_l2.append(check_data)
         elif level == "L3":
             checks_list_l3.append(check_data)
+    
+     # Extracting screening checkers data
+    screening_checkers = []
+    if "Ranking of Checkers" in screening_data:
+        ranking_of_checkers = screening_data["Ranking of Checkers"]
+        for checkers_list in ranking_of_checkers:
+            for checker_data in checkers_list:
+                check_data = {
+                    "Checker": checker_data["Checker"],
+                    "Level": checker_data["Level"],
+                    "Priority": int(checker_data["Priority"][1:]),
+                    "#": int(checker_data["#"]),
+                    "Title": checker_data["Title"]
+                }
+                screening_checkers.append(check_data)
 
     # Parse commit data
     git_repository_name = commit_data["Repository"]["Name"]
@@ -169,7 +155,6 @@ def main():
     print("Git Message:", git_message)
 
 
-
     # Replace placeholders in the HTML template with the extracted data
     placeholders = {
         "$commit$": git_commit_hash,
@@ -187,15 +172,28 @@ def main():
         "$checkboxes_red$":    populate_lX_checks(checks_list_l1, "red"),
         "$checkboxes_yellow$": populate_lX_checks(checks_list_l2, "yellow"),
         "$checkboxes_green$":  populate_lX_checks(checks_list_l3, "green"),
+
+        "$pie_chart_data$": generate_pie_table(screening_checkers),
     }
     
     for placeholder, value in placeholders.items():
         html_template = html_template.replace(placeholder, str(value))
     
+    filename = f"{reports_dir}/{epoch_to_filename(git_date_epoch)}.html"
     # Write the modified HTML template to a new file
-    with open(f"{epoch_to_filename(git_date_epoch)}.html", 'w') as f:
+    with open(filename, 'w') as f:
         f.write(html_template)
+    
+    return filename
 
 # Execute the main function if the script is run directly
 if __name__ == "__main__":
-    main()
+    # Read the JSON string from the command line
+    json_str = sys.argv[1]
+    html_template_path = sys.argv[2]
+
+    # Open the json file
+    with open(json_str, 'r') as file:
+        json_str = file.read()
+
+    process(json_str=json_str, html_template_path=html_template_path)
