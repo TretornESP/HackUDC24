@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12.2-slim
 
 ENV GROUP_ID=1000 \
     USER_ID=1000
@@ -11,6 +11,7 @@ ADD app/* /backend/app/
 ADD templates/* /templates/
 COPY wsgi.py /backend/wsgi.py
 COPY requirements.txt /backend/requirements.txt
+RUN mkdir /reports
 
 WORKDIR /backend/
 
@@ -18,10 +19,9 @@ WORKDIR /backend/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
-
 RUN addgroup --gid $GROUP_ID www
 RUN adduser --shell /bin/sh -u $USER_ID www --ingroup www
-
+RUN chown -R www:www /reports
 USER www
 
 # Run the application

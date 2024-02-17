@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install 'buildbot[bundle]'
+RUN python3 -m pip install 'txrequests'
 
 RUN ln -sf /worker/codee-2024.1.1-linux-x86_64/bin/pwdirectives /usr/bin/pwdirectives
 RUN ln -sf /worker/codee-2024.1.1-linux-x86_64/bin/pwloops /usr/bin/pwloops
