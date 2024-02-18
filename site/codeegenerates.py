@@ -46,6 +46,8 @@ def main():
     # Clone repository, edit docker-compose.yml, and run docker-compose up --build
     clone_repository(github_url)
 
+    print("Now edit docker-compose.yml and master.cfg to set keys and addresses")
+
     # Not composing because further configuration is needed
     # subprocess.run(['docker-compose', 'up', '--build'])
 
