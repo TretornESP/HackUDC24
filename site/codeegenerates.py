@@ -19,6 +19,12 @@ def clone_repository(url):
     subprocess.run(['chmod', '+x', 'master/*.sh'])
     subprocess.run(['chmod', '+x', 'worker/*.sh'])
 
+    # mkdir -p certs
+    subprocess.run(['mkdir', '-p', 'certs'])
+
+    # openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certs/tretornesp.key -out certs/tretornesp.crt
+    subprocess.run(['openssl', 'req', '-x509', '-nodes', '-days', '365', '-newkey', 'rsa:2048', '-keyout', 'certs/tretornesp.key', '-out', 'certs/tretornesp.crt'])
+
     # Edit docker-compose.yml file
     with open('docker-compose.yml', 'r') as file:
         content = file.read()
@@ -39,7 +45,9 @@ def main():
 
     # Clone repository, edit docker-compose.yml, and run docker-compose up --build
     clone_repository(github_url)
-    subprocess.run(['docker-compose', 'up', '--build'])
+
+    # Not composing because further configuration is needed
+    # subprocess.run(['docker-compose', 'up', '--build'])
 
 if __name__ == "__main__":
     main()
