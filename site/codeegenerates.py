@@ -15,6 +15,10 @@ def clone_repository(url):
     # Change directory to the cloned repository
     os.chdir(repository)
 
+    # chmod +x master/*.sh && chmod +x worker/*.sh
+    subprocess.run(['chmod', '+x', 'master/*.sh'])
+    subprocess.run(['chmod', '+x', 'worker/*.sh'])
+
     # Edit docker-compose.yml file
     with open('docker-compose.yml', 'r') as file:
         content = file.read()
