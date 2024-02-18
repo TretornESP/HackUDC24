@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeit - Real-time Code Performance Assessment</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #7A5DEA, #00D2FF);
+        }
+
+        h1 {
+            color: #FFFFFF;
+            font-family: "Inter", "Open-sans", sans-serif;
+            font-size: 66px;
+            font-weight: 400;
+            line-height: 65px;
+            letter-spacing: -2.2px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            border: none;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #7A5DEA;
+            color: #FFFFFF;
+            cursor: pointer;
+            outline: none;
+            width: 200px;
+            height: 100px;
+            font-size: xx-large;
+            display: inline-block;
+            align-self: center;
+        }
+
+        .centering {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Codeit allows you to assess your code's performance in real time!</h1>
+        <br><br>
+        <div class="centering">
+            <button type="button" id="downloadButton">Download</button>
+        </div>
+
+        <script>
+            document.getElementById('downloadButton').addEventListener('click', function() {
+                fetch('./codeegenerates.py')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        // Create a temporary link element
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = 'codeegenerates.py'; // Set the filename
+                        // Append the link to the document body
+                        document.body.appendChild(link);
+                        // Click the link to trigger the download
+                        link.click();
+                        // Remove the link from the document body
+                        document.body.removeChild(link);
+                    })
+                    .catch(error => console.error('Error downloading file:', error));
+            });
+        </script>
+</body>
+</html>

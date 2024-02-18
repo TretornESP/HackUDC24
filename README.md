@@ -1,8 +1,12 @@
 # HackUDC24 - Codeegenerates :)
 ## Modifications before execution
-For execution you need three files created:
- - `certs` folder with certificates for nginx
- - `secret.env` for holding keys
+For execution you need the `certs` folder created with certificates for nginx
+
+Due to GitHub sometimes messing up permissions when cooperating with people who use Windows, in case of a Docker file, you should probably execute
+```bash
+chmod +x master/*.sh
+chmod +x worker/*.sh
+```
 
 You must change the `docker-compose.yml` and the `master/master.cfg` configuration files because of weird edge cases which are very time-consuming to solve inside the latter file.
 ### docker-compose.yml
