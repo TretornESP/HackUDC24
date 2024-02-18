@@ -46,7 +46,7 @@ We will use:
  - The `--show-progress` flag to see the progress of the analysis.
 
 
-## Step X: Obtain Codee metrics for chart generation
+## Step 2: Obtain Codee metrics for chart generation
 When new changes are commited into the repository, a new worker container is instantiated to execute Codee and obtain the possible optimizations that can be applied in the code.
 
 Initially, the repository is cloned into the container and the compile commands database is produced for the Codee execution.

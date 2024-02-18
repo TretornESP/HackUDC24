@@ -41,7 +41,7 @@ PASSWORD = "dtawogyinvochfsc"
 
 def mail_warning(recipient, tag, commit):
     subject = f"Tag {tag} in commit {commit}"
-    body = f"Tag {tag} in commit {commit}"
+    body = f"Tag {tag} in commit. Check the report in https://localhost::4043/{commit}"
     try :
         msg = MIMEText(body)
         msg['Subject'] = subject

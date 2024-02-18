@@ -25,10 +25,8 @@ services:
         condition: service_healthy
     links:
       - db
-    env_file:
-      - secret.env
     environment:
-      GITHUB_SECRET: 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
+      GITHUB_SECRET: <github_secret>
       TARGET_REPO: https://github.com/tretornesp/mbedtls.git
       TARGET_BRANCH: hackudc
       REPORT_URL: http://localhost:4043/
