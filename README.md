@@ -1,4 +1,4 @@
-# HackUDC24 - Codeegenerates :)
+# HackUDC24 - Co-deegenerates :)
 ## Modifications before execution
 For execution you need the `certs` folder created with certificates for nginx
 
